@@ -1,0 +1,15 @@
+{
+	"name": "houbituv-server",
+	"private": true,
+	"dependencies": {
+		"@koa/router": "10.0.0",
+		"dotenv": "8.2.0",
+		"hi-base32": "0.5.1",
+		"koa": "2.13.1",
+		"koa-bodyparser": "4.3.0",
+		"koa-static": "5.0.0"
+	},
+	"scripts": {
+		"start": "node -r dotenv/config ./src/server.js"
+	}
+}

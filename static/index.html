@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="/default.css">
+	<link rel="icon" href="/img/melon.png" type="image">
+	<title>Šrumajt login</title>
+</head>
+<body>
+	<div class="wrapper">
+		<h1> Welcome, please log in! </h1>
+	</div>
+	<div class="wrapper2">
+		<form name="login">
+			<input type="text" name="username" placeholder="Name" value="admin">
+			<br>
+
+			<input type="password" name="password" placeholder="Password" value="admin">
+			<br>
+
+			<div class="alignRight">
+				<button type="submit">
+					Submit
+				</button>
+			</div>
+		</form>
+	</div>
+
+	<div class="errWrp">
+		<div id="err">
+			ERROR: Invalid password / username
+		</div>
+	</div>
+
+	<script>
+		async function tfa(code) {
+			const response = await fetch('/otp', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					code: code.replace(/\s+/g, '')
+				})
+			});
+
+			return response.ok;
+		}
+
+		async function login(username, password) {
+			const response = await fetch('/login', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					username,
+					password
+				})
+			});
+
+			return response.ok;
+		}
+
+		document.forms.login.onsubmit = async function (e) {
+			e.preventDefault();
+
+			if (await login(this.username.value, this.password.value) && await tfa(prompt('2FA:'))) {
+				location = '/private/';
+			}
+			else {
+				document.getElementById('err').style.display = 'block';
+			}
+		};
+	</script>
+</body>
+</html>
